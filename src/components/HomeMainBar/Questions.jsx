@@ -62,7 +62,7 @@ const Questions = ({ question }) => {
             <Link
               to={`/questions/${question.id}`}
               className="question-title-link"
-              target={question.similarity_percentage ? "_blank" : ""}
+              target={question.similarity ? "_blank" : ""}
             >
               {question.title}
             </Link>
