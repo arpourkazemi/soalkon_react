@@ -66,11 +66,6 @@ const LeftSideBar = () => {
                   alignItems: "center",
                 }}
               >
-                <img
-                  src={moneyIcon}
-                  alt="upvote"
-                  style={{ width: "20px", height: "20px", cursor: "pointer" }}
-                />
                 <h4 style={{ paddingRight: "1rem" }}>
                   {`اعتبار حساب : ${toFarsiNumber(currentUser?.balance)} ریال`}
                 </h4>

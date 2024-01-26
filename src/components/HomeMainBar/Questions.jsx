@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import { gsap } from "gsap";
 
-import { fromNow } from "../../utils";
+import { fromNow, toFarsiNumber } from "../../utils";
 import { allAvatars } from "../../Avatars/Avatars";
 import { motion } from "framer-motion";
 
@@ -28,11 +28,11 @@ const Questions = ({ question }) => {
     <div className="display-question-container" data-scroll-section>
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div className="display-votes-ans">
-          <p>{question.upvote - question.downvote}</p>
+          <p>{toFarsiNumber(question.upvote - question.downvote)}</p>
           <p className="label">رای</p>
         </div>
         <div className="display-votes-ans">
-          <p>{question.answers?.length}</p>
+          <p>{toFarsiNumber(question.answers?.length)}</p>
           <p className="label">پاسخ</p>
         </div>
       </div>
@@ -92,9 +92,7 @@ const Questions = ({ question }) => {
             <p
               className="display-time"
               style={{
-                color: `hsl(${
-                  (question.similarity / 100) * 120
-                }, 100%, 50%)`,
+                color: `hsl(${(question.similarity / 100) * 120}, 100%, 50%)`,
                 backgroundColor: "#000",
                 padding: "1rem",
                 borderRadius: ".5rem",

@@ -5,8 +5,10 @@ import { motion } from "framer-motion";
 import { gsap } from "gsap";
 
 import { allAvatars } from "../Avatars/Avatars";
-import { fromNow } from "../utils";
+import { fromNow, toFarsiNumber } from "../utils";
 import axios from "axios";
+
+import deleteIcon from "../assets/trash-solid.svg";
 
 const DisplayAnswers = ({ question, setQuestion }) => {
   const getSingleQuestion = async () => {
@@ -60,6 +62,12 @@ const DisplayAnswers = ({ question, setQuestion }) => {
         console.error(err);
       });
     setLoading(false);
+  };
+
+  const buyQuestion = async () => {
+    if (!currentUser) {
+      alert("این عملیات نیازمند ورود به سیستم است");
+    }
   };
 
   useEffect(() => {
@@ -128,11 +136,13 @@ const DisplayAnswers = ({ question, setQuestion }) => {
                     className="delete-btn"
                     style={{ backgroundColor: "#009dff" }}
                     onClick={() => {
-                      handleAccept(ans);
+                      buyQuestion();
                     }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    خرید این سوال به مبلغ فلان
+                    {`مشاهده تمام پاسخ های این سوال به مبلغ ${toFarsiNumber(
+                      question?.price
+                    )} ریال`}
                   </motion.button>
                 </div>
               </div>
@@ -159,16 +169,16 @@ const DisplayAnswers = ({ question, setQuestion }) => {
                 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <lord-icon
-                  src="https://cdn.lordicon.com/jmkrnisz.json"
-                  trigger="hover"
-                  colors="primary:#fff"
+                <img
+                  src={deleteIcon}
+                  alt="upvote"
                   style={{
                     width: "20px",
                     height: "20px",
-                    paddingLeft: "10px",
+                    cursor: "pointer",
+                    marginLeft: "10px",
                   }}
-                ></lord-icon>
+                />
                 حذف کردن پاسخ
               </motion.button>
             )}

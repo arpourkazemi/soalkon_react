@@ -84,97 +84,101 @@ const AskQuestions = () => {
     //   11: "70.0",
     //   12: "90.0",
     // });
-    // setShowSimilarQuestions([
-    //   {
-    //     "question_details": {
-    //       "id": 14,
-    //       "title": "عکس در لاتک",
-    //       "body": "how to insert picture in latex?",
-    //       "price": 0,
-    //       "timestamp": "2024-01-26T15:15:45.480053",
-    //       "question_status": "NOT_SOLVED",
-    //       "upvote": 0,
-    //       "downvote": 0,
-    //       "inquirer": {
-    //         "id": 2,
-    //         "name": "sina",
-    //         "family_name": null,
-    //         "username": null,
-    //         "password": "12345678",
-    //         "email": "smj0098.developer@gmail.com",
-    //         "profile_picture": null,
-    //         "biography": null,
-    //         "avatar": "28",
-    //         "balance": 0,
-    //         "time": "2024-01-26T15:11:57.354043"
-    //       },
-    //       "tags": [
-    //         {
-    //           "id": 4,
-    //           "name": "لاتک"
-    //         },
-    //         {
-    //           "id": 5,
-    //           "name": "عکس"
-    //         }
-    //       ],
-    //       "answers": []
-    //     },
-    //     "similarity": 54
-    //   },
-    //   {
-    //     "question_details": {
-    //       "id": 13,
-    //       "title": "جدول در لاتک",
-    //       "body": "how to insert table in latex?",
-    //       "price": 0,
-    //       "timestamp": "2024-01-26T15:13:42.362629",
-    //       "question_status": "NOT_SOLVED",
-    //       "upvote": 0,
-    //       "downvote": 0,
-    //       "inquirer": {
-    //         "id": 2,
-    //         "name": "sina",
-    //         "family_name": null,
-    //         "username": null,
-    //         "password": "12345678",
-    //         "email": "smj0098.developer@gmail.com",
-    //         "profile_picture": null,
-    //         "biography": null,
-    //         "avatar": "28",
-    //         "balance": 0,
-    //         "time": "2024-01-26T15:11:57.354043"
-    //       },
-    //       "tags": [
-    //         {
-    //           "id": 4,
-    //           "name": "لاتک"
-    //         },
-    //         {
-    //           "id": 3,
-    //           "name": "جدول"
-    //         }
-    //       ],
-    //       "answers": []
-    //     },
-    //     "similarity": 43
-    //   }
-    // ])
-    await axios
-      .get(`/api/questionsimilarity/${questionBody}`)
-      .then((res) => {
-        const arr = res.data.map((q) => {
-          console.log(q)
-          return {...q.question_details, similarity: q.similarity};
-        } )
-        setSimilarQuestions(arr);
-        console.log(arr)
-        setShowSimilarQuestions(true)
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    setLoading(false);
+    const data = [
+      {
+        question_details: {
+          id: 14,
+          title: "عکس در لاتک",
+          body: "how to insert picture in latex?",
+          price: 0,
+          timestamp: "2024-01-26T15:15:45.480053",
+          question_status: "NOT_SOLVED",
+          upvote: 0,
+          downvote: 0,
+          inquirer: {
+            id: 2,
+            name: "sina",
+            family_name: null,
+            username: null,
+            password: "12345678",
+            email: "smj0098.developer@gmail.com",
+            profile_picture: null,
+            biography: null,
+            avatar: "28",
+            balance: 0,
+            time: "2024-01-26T15:11:57.354043",
+          },
+          tags: [
+            {
+              id: 4,
+              name: "لاتک",
+            },
+            {
+              id: 5,
+              name: "عکس",
+            },
+          ],
+          answers: [],
+        },
+        similarity: 54,
+      },
+      {
+        question_details: {
+          id: 13,
+          title: "جدول در لاتک",
+          body: "how to insert table in latex?",
+          price: 0,
+          timestamp: "2024-01-26T15:13:42.362629",
+          question_status: "NOT_SOLVED",
+          upvote: 0,
+          downvote: 0,
+          inquirer: {
+            id: 2,
+            name: "sina",
+            family_name: null,
+            username: null,
+            password: "12345678",
+            email: "smj0098.developer@gmail.com",
+            profile_picture: null,
+            biography: null,
+            avatar: "28",
+            balance: 0,
+            time: "2024-01-26T15:11:57.354043",
+          },
+          tags: [
+            {
+              id: 4,
+              name: "لاتک",
+            },
+            {
+              id: 3,
+              name: "جدول",
+            },
+          ],
+          answers: [],
+        },
+        similarity: 43,
+      },
+    ];
+    const arr = data.map((q) => {
+      return { ...q.question_details, similarity: q.similarity };
+    });
+    setSimilarQuestions(arr);
+    setShowSimilarQuestions(true);
+    // await axios
+    //   .get(`/api/questionsimilarity/${questionBody}`)
+    //   .then((res) => {
+    //     const arr = res.data.map((q) => {
+    //       return {...q.question_details, similarity: q.similarity};
+    //     } )
+    //     setSimilarQuestions(arr);
+    //     console.log(arr)
+    //     setShowSimilarQuestions(true)
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
+    // setLoading(false);
   };
 
   //to handle the data after submitting a question
@@ -320,6 +324,7 @@ const AskQuestions = () => {
                       className="normal-input"
                       id="ask-ques-tags"
                       value={price}
+                      placeholder={"قیمت به ریال"}
                       onChange={(e) => {
                         setPrice(e.target.value);
                       }}

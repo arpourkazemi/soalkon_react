@@ -68,11 +68,6 @@
   border: solid 1px #0000003e;
   border-radius: 3px;
 }
-.navbar form .search-icon {
-  position: absolute;
-  left: 25px;
-  top: 8px;
-}
 .nav-links {
   padding: 7px 30px;
   border: solid 1px blue;
@@ -185,33 +180,6 @@
   pointer-events: none;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   transition: all 500ms;
-}
-
-.search {
-  position: absolute;
-  top: 15px;
-  margin-right: -20px;
-}
-lord-icon {
-  cursor: pointer;
-}
-/* styling search-icon */
-.search {
-  fill: var(--text-color);
-  right: var(--inline-padding-of-input);
-}
-/* svg -- size */
-.search-icon {
-  width: 17px;
-  display: block;
-}
-.search-label {
-  width: 100%;
-  padding: 0.8em;
-  height: 40px;
-  padding-inline: var(--inline-padding-of-input);
-  display: flex;
-  align-items: center;
 }
 
 /* styling of input */

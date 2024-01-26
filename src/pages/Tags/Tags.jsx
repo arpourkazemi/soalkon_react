@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import "./tags.css";
 import LeftSideBar from "../../components/LeftSideBar/LeftSideBar";
-import TagsList from "./TagsList";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Tags = () => {
   const [loading, setLoading] = useState(false);
@@ -43,7 +43,12 @@ const Tags = () => {
           </p>
           <div className="tags-list-container">
             {tags.map((tag) => (
-              <TagsList tag={tag} key={tag.id} />
+              <div className="tag">
+                <Link to={`/questionsoftag/${tag.name}`}>
+                  <h5>{tag.name}</h5>
+                </Link>
+                <p> بدون توضیحات</p>
+              </div>
             ))}
           </div>
         </div>

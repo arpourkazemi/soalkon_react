@@ -10,29 +10,26 @@ import axios from "axios";
 const Payment = () => {
   const { id } = useParams();
 
+  const giftCards = [{ code: "prof_khosravi", price: 1000000 }];
+
   const [currentUser, setCurrentUser] = useState(
     JSON.parse(localStorage.getItem("currentUser"))
   );
   const [price, setPrice] = useState(100000);
   const [giftCardCode, setGiftCardCode] = useState("");
 
-  const [currentProfile, setCurrentProfile] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
   }, [localStorage.getItem("currentUser")]);
 
-  const [editswitch, setEditSwitch] = useState(false); //edit profile useState
-
-  const updatedUser = JSON.parse(localStorage.getItem("UpdatedProfile")); //updated user
-
-  const getUserProfile = async () => {
+  const getUserDetails = async () => {
     setLoading(true);
     await axios
       .get(`api/inquirer/${id}`)
       .then((res) => {
-        setCurrentProfile(res.data);
+        setCurrentUser(res.data);
         // console.log(res.data);
       })
       .catch((err) => {
@@ -41,9 +38,26 @@ const Payment = () => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    getUserProfile();
-  }, []);
+  const saveUser = async (addedPrice = price) => {
+    console.log(addedPrice);
+    setLoading(true);
+    await axios
+      .post(`api/inquirer`, {
+        ...currentUser,
+        balance: (currentUser.balance += parseInt(addedPrice)),
+      })
+      .then((res) => {
+        alert("پرداخت موفق آمیز");
+        setCurrentUser(res.data);
+        localStorage.setItem("currentUser", JSON.stringify(res.data));
+        setPrice(100000);
+        setGiftCardCode("");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    setLoading(false);
+  };
 
   return (
     <div className="home-container-1">
@@ -116,7 +130,7 @@ const Payment = () => {
             <motion.button
               className="ask-btn"
               style={{ alignSelf: "flex-end" }}
-              onClick={() => {}}
+              onClick={() => saveUser()}
               whileTap={{ scale: 0.95 }}
             >
               پرداخت
@@ -144,18 +158,21 @@ const Payment = () => {
               }}
             >
               <h4 style={{ alignSelf: "flex-start" }}>پرداخت با کارت هدیه</h4>
-              {giftCardCode === "prof_khosravi" && (
-                <label
-                  style={{
-                    paddingRight: "2rem",
-                    color: "green",
-                    alignSelf: "flex-end",
-                  }}
-                  htmlFor="ask-ques-title"
-                  className="label"
-                >
-                  <p>این کارت هدیه دارای اعتبار به مبلغ 1000000 ریال است</p>
-                </label>
+              {giftCards.map(
+                (giftCard) =>
+                  giftCardCode === giftCard.code && (
+                    <label
+                      style={{
+                        paddingRight: "2rem",
+                        color: "green",
+                        alignSelf: "flex-end",
+                      }}
+                      htmlFor="ask-ques-title"
+                      className="label"
+                    >
+                      <p>این کارت هدیه دارای اعتبار به مبلغ 1000000 ریال است</p>
+                    </label>
+                  )
               )}
             </div>
             <div
@@ -199,7 +216,12 @@ const Payment = () => {
             <motion.button
               className="ask-btn"
               style={{ alignSelf: "flex-end" }}
-              onClick={() => {}}
+              onClick={() => {
+                saveUser(
+                  giftCards.find((giftCard) => giftCardCode === giftCard.code)
+                    .price
+                );
+              }}
               whileTap={{ scale: 0.95 }}
             >
               ثبت کارت هدیه

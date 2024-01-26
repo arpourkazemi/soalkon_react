@@ -44,6 +44,11 @@
 .question-details-container .question-body {
   line-height: 22px;
   white-space: pre-line;
+  background-color: #f8f8f2;
+  border-radius: 10px;
+  padding: 2rem;
+  direction: ltr;
+  margin-left: 1rem;
 }
 .question-details-container .question-details-tags {
   display: flex;
@@ -105,34 +110,34 @@
   text-decoration: none;
 }
 .question-status-in-progress p {
-  padding: 5px;
+  padding: 10px;
   margin: 3px;
   margin-left: 15px;
   font-size: 1rem;
   line-height: 22px;
-  border-radius: 2px;
+  border-radius: 10px;
   background-color: #efe1f4;
   color: #9a399d;
   text-decoration: none;
 }
 .question-status-solved p {
-  padding: 5px;
+  padding: 10px;
   margin: 3px;
   margin-left: 15px;
   font-size: 1rem;
   line-height: 22px;
-  border-radius: 2px;
+  border-radius: 10px;
   background-color: #e5f4e1;
   color: #4b9d39;
   text-decoration: none;
 }
 .question-status-not-solved p {
-  padding: 5px;
+  padding: 10px;
   margin: 3px;
   margin-left: 15px;
   font-size: 1rem;
   line-height: 22px;
-  border-radius: 2px;
+  border-radius: 10px;
   background-color: #f4e1e1;
   color: #9d3939;
   text-decoration: none;

@@ -19,6 +19,14 @@
 .user-name p {
   color: #7e7e7e;
 }
+
+.profile-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .user-add-friend {
   margin-top: 20px;
   cursor: pointer;
@@ -51,7 +59,6 @@
 }
 .edit-profile-form {
   padding: 20px;
-  border: 1px solid #dbd9d9;
   border-radius: 5px;
 }
 .edit-profile-form label h3,
@@ -150,8 +157,6 @@
 /* Edit Avatar UI */
 .avatar-container {
   height: auto;
-  max-height: 480px;
-  overflow-y: scroll;
   display: grid;
   padding: 2em 0;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -163,10 +168,12 @@
   border: 1px solid rgb(49, 48, 48);
   border-radius: 50%;
   background-color: whitesmoke;
-  padding: 10px 20px;
+  /* padding: 10px 20px; */
+  /* aspect-ratio: 1; */
   /* box-shadow: 4px 29px 24px -9px rgba(150, 150, 150, 0.24); */
   transition: all 100ms;
 }
 .active-avatar {
   border: 3px solid rgb(40, 39, 39) !important;
+  background-color: rgb(255, 205, 144) !important;
 }

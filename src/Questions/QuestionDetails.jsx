@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from "react";
-import {
-  useParams,
-  Link,
-  useNavigate,
-  useLocation,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 // import moment from "moment";
 import moment from "moment-jalaali";
 import copy from "copy-to-clipboard";
 // import { useSelector, useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 
+import deleteIcon from "../assets/trash-solid.svg";
 import upVoteIcon from "../assets/circle-up-solid.svg";
+import downVoteIcon from "../assets/circle-down-solid.svg";
 
 import "./Questions.css";
 import DisplayAnswers from "./DisplayAnswers";
-import { fromNow } from "../utils";
+import { fromNow, toFarsiNumber } from "../utils";
 import axios from "axios";
 import { allAvatars } from "../Avatars/Avatars";
 import Loading from "../components/Loading/Loading";
@@ -207,16 +203,16 @@ const QuestionDetails = (props) => {
                     }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <lord-icon
-                      src="https://cdn.lordicon.com/jmkrnisz.json"
-                      trigger="hover"
-                      colors="primary:#fff"
+                    <img
+                      src={deleteIcon}
+                      alt="upvote"
                       style={{
                         width: "20px",
                         height: "20px",
-                        paddingLeft: "10px",
+                        cursor: "pointer",
+                        marginLeft: "10px",
                       }}
-                    ></lord-icon>
+                    />
                     حذف کردن سوال
                   </motion.button>
                 ) : (
@@ -229,30 +225,22 @@ const QuestionDetails = (props) => {
                     whileTap={{ scale: 0.95 }}
                     tool
                   >
-                    <lord-icon
-                      src="https://cdn.lordicon.com/jmkrnisz.json"
-                      trigger="hover"
-                      colors="primary:#fff"
+                    <img
+                      src={deleteIcon}
+                      alt="upvote"
                       style={{
                         width: "20px",
                         height: "20px",
-                        paddingLeft: "10px",
+                        cursor: "pointer",
+                        marginLeft: "10px",
                       }}
-                    ></lord-icon>
+                    />
                     حذف کردن سوال
                   </motion.button>
                 ))}
             </div>
             <div className="question-details-container-2">
               <div className="question-votes">
-                <lord-icon
-                  src="https://cdn.lordicon.com/xdakhdsq.json"
-                  trigger="click"
-                  colors="primary:#808080"
-                  onClick={upVoteQuestion}
-                  state="hover-1"
-                  style={{ width: "25px", height: "25px" }}
-                ></lord-icon>
                 <img
                   src={upVoteIcon}
                   alt="upvote"
@@ -260,16 +248,14 @@ const QuestionDetails = (props) => {
                   style={{ width: "25px", height: "25px", cursor: "pointer" }}
                 />
                 <p style={{ margin: ".25em 0", color: "#808080" }}>
-                  {upVotes - downvotes}
+                  {toFarsiNumber(upVotes - downvotes)}
                 </p>
-                <lord-icon
-                  src="https://cdn.lordicon.com/albqovim.json"
-                  trigger="click"
+                <img
+                  src={downVoteIcon}
+                  alt="upvote"
                   onClick={downVoteQuestion}
-                  colors="primary:#808080"
-                  state="hover-1"
-                  style={{ width: "25px", height: "25px" }}
-                ></lord-icon>
+                  style={{ width: "25px", height: "25px", cursor: "pointer" }}
+                />
               </div>
               <div style={{ width: "100%" }}>
                 <p className="question-body">{currentQuestion?.body}</p>

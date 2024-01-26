@@ -13,22 +13,22 @@ export function fromNow(date) {
   var days = Math.floor(seconds / 86400);
 
   if (days > 548) {
-    return toFarsiNumber(years) + " سال پیش";
+    return toFarsiNumber(years) + " سال قبل";
   }
   if (days >= 320 && days <= 547) {
-    return "یک سال پیش";
+    return "یک سال قبل";
   }
   if (days >= 45 && days <= 319) {
-    return toFarsiNumber(months) + " ماه پیش";
+    return toFarsiNumber(months) + " ماه قبل";
   }
   if (days >= 26 && days <= 45) {
-    return "یک ماه پیش";
+    return "یک ماه قبل";
   }
 
   var hours = Math.floor(seconds / 3600);
 
   if (hours >= 36 && days <= 25) {
-    return toFarsiNumber(days) + " روز پیش";
+    return toFarsiNumber(days) + " روز قبل";
   }
   if (hours >= 22 && hours <= 35) {
     return "دیروز";
@@ -37,18 +37,18 @@ export function fromNow(date) {
   var minutes = Math.floor(seconds / 60);
 
   if (minutes >= 90 && hours <= 21) {
-    return toFarsiNumber(hours) + " ساعت پیش";
+    return toFarsiNumber(hours) + " ساعت قبل";
   }
   if (minutes >= 45 && minutes <= 89) {
-    return "یک ساعت پیش";
+    return "یک ساعت قبل";
   }
   if (seconds >= 90 && minutes <= 44) {
-    return toFarsiNumber(minutes) + " دقیقه پیش";
+    return toFarsiNumber(minutes) + " دقیقه قبل";
   }
   if (seconds >= 45 && seconds <= 89) {
-    return "یک دقیقه پیش";
+    return "یک دقیقه قبل";
   }
   if (seconds >= 0 && seconds <= 45) {
-    return "چند لحظه پیش";
+    return "چند لحظه قبل";
   }
 }

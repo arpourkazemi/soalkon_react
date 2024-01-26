@@ -5,8 +5,6 @@ import { motion } from "framer-motion";
 
 import "./UserProfile.css";
 import LeftSideBar from "../../components/LeftSideBar/LeftSideBar";
-import EditProfileForm from "./EditProfileForm";
-import ProfileBio from "./ProfileBio";
 import { allAvatars } from "../../Avatars/Avatars";
 import { fromNow } from "../../utils";
 import axios from "axios";
@@ -16,21 +14,50 @@ const UserProfile = () => {
   const navigate = useNavigate();
 
   const [currentUser, setCurrentUser] = useState();
-  const [currentProfile, setCurrentProfile] = useState();
   const [loading, setLoading] = useState(false);
+
+  const [name, setName] = useState(currentUser?.name);
+  const [email, setEmail] = useState(currentUser?.email);
+  const [biography, setBiography] = useState(currentUser?.biography);
+  const [avatarIndex, setAvatarIndex] = useState(currentUser?.avatar);
+  const [editswitch, setEditSwitch] = useState(false); //edit profile useState
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    await axios
+      .post("api/inquirer", {
+        ...currentUser,
+        name: name,
+        biography: biography,
+        avatar: avatarIndex,
+        email: email,
+        time: currentUser.time,
+      })
+      .then((res) => {
+        localStorage.setItem("currentUser", JSON.stringify(res.data));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    setLoading(false);
+
+    setEditSwitch(false);
+  };
 
   useEffect(() => {
     setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
   }, [localStorage.getItem("currentUser")]);
-
-  const [editswitch, setEditSwitch] = useState(false); //edit profile useState
 
   const getUserProfile = async () => {
     setLoading(true);
     await axios
       .get(`api/inquirer/${id}`)
       .then((res) => {
-        setCurrentProfile(res.data);
+        setCurrentUser(res.data);
+        setName(res.data.name);
+        setBiography(res.data.biography);
+        setAvatarIndex(res.data.avatar);
+        setEmail(res.data.email);
       })
       .catch((err) => {
         console.error(err);
@@ -42,81 +69,131 @@ const UserProfile = () => {
     getUserProfile();
   }, []);
 
-  useEffect(() => {
-    console.log(currentProfile);
-    console.log(id);
-  }, [currentProfile]);
-
   return (
     <div className="home-container-1">
       <LeftSideBar />
       <div className="home-container-2">
         <div className="main-bar">
-          <h1 className="tags-h1">پروفایل</h1>
-          {currentProfile && currentProfile.id == id && (
-            <motion.button
-              className="ask-btn"
-              onClick={() => setEditSwitch(true)}
-              style={{ marginLeft: "1.5rem" }}
-              whileTap={{ scale: 0.95 }}
-            >
-              ویرایش پروفایل
-            </motion.button>
-          )}
+          <div className="profile-header">
+            <h1 className="tags-h1">
+              {editswitch ? "ویرایش پروفایل" : "پروفایل"}
+            </h1>
 
-          <div className="user-details">
-            <img
-              src={allAvatars[currentProfile?.avatar]}
-              style={{
-                boxShadow:
-                  "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
-              }}
-              height="180px"
-              alt=""
-            />
-            <div className="user-name">
-              <h1 style={{ marginBottom: "0" }}>{currentProfile?.name}</h1>
-              <h3 style={{ marginBottom: "0" }}>{currentProfile?.email}</h3>
-              <p className="label" style={{ marginTop: "10px" }}>
-                اضافه شده {fromNow(moment(currentProfile?.time))}
-              </p>
-            </div>
-          </div>
-          {currentProfile && currentProfile.id == id && (
-            <motion.button
-              type="button"
-              onClick={() => setEditSwitch(true)}
-              className="edit-profile-btn cta"
-              whileTap={{ scale: 0.95 }}
-            >
-              <svg
-                viewBox="0 0 46 16"
-                height="10"
-                width="30"
-                xmlns="http://www.w3.org/2000/svg"
-                id="arrow-horizontal"
+            {currentUser && currentUser.id == id && (
+              <motion.button
+                className="ask-btn"
+                onClick={() => setEditSwitch((perv) => !perv)}
+                style={{ marginLeft: "1.5rem" }}
+                whileTap={{ scale: 0.95 }}
               >
-                <path
-                  transform="translate(30)"
-                  d="M8,0,6.545,1.455l5.506,5.506H-30V9.039H12.052L6.545,14.545,8,16l8-8Z"
-                  data-name="Path 10"
-                  id="Path_10"
-                ></path>
-              </svg>
-              <span className="hover-underline-animation">ویرایش پروفایل</span>
-            </motion.button>
+                ویرایش پروفایل
+              </motion.button>
+            )}
+          </div>
+
+          {!editswitch ? (
+            <div className="user-details">
+              <img
+                src={allAvatars[currentUser?.avatar]}
+                height="180px"
+                alt=""
+              />
+              <div className="user-name">
+                <h1 style={{ marginBottom: "0" }}>{currentUser?.name}</h1>
+                <h3 style={{ marginBottom: "0" }}>{currentUser?.email}</h3>
+                <p className="label" style={{ marginTop: "10px" }}>
+                  {currentUser?.biography}
+                </p>
+                <p className="label" style={{ marginTop: "10px" }}>
+                  {fromNow(moment(currentUser?.time)) +
+                    " پروفایلتو آپدیت کردی :)"}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <form className="edit-profile-form" onSubmit={handleSubmit}>
+                <div className="input-group">
+                  <label htmlFor="name" className="label">
+                    <h3>نام</h3>
+                  </label>
+                  <input
+                    type="text"
+                    style={{ width: "93%" }}
+                    className="normal-input"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <label htmlFor="email" className="label">
+                    <h3>ایمیل</h3>
+                  </label>
+                  <input
+                    type="text"
+                    style={{ width: "93%" }}
+                    className="normal-input"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+
+                  <label htmlFor="biography" className="label">
+                    <h3>بیوگرافی</h3>
+                  </label>
+                  <input
+                    type="text"
+                    style={{ width: "93%" }}
+                    className="normal-input"
+                    value={biography}
+                    onChange={(e) => setBiography(e.target.value)}
+                  />
+                </div>
+                <div className="input-group" style={{ marginTop: "1em" }}>
+                  <label htmlFor="avatar" className="label">
+                    <h3>آواتار</h3>
+                    <div className="avatar-container normal-input">
+                      {allAvatars.map((avatar) => (
+                        <motion.img
+                          className={`${
+                            avatarIndex == allAvatars.indexOf(avatar)
+                              ? "active-avatar"
+                              : ""
+                          }`}
+                          src={avatar}
+                          alt=""
+                          height="120px"
+                          whileTap={{ scale: 1 }}
+                          whileHover={{
+                            scale: 1.05,
+                          }}
+                          key={allAvatars.indexOf(avatar)}
+                          onClick={() =>
+                            setAvatarIndex(allAvatars.indexOf(avatar))
+                          }
+                        />
+                      ))}
+                    </div>
+                  </label>
+                </div>
+                <br />
+                <div className="edit-profile-button">
+                  <motion.button
+                    type="button"
+                    className="user-cancel-btn"
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setEditSwitch(false)}
+                  >
+                    صرف نظر
+                  </motion.button>
+                  <motion.input
+                    whileTap={{ scale: 0.9 }}
+                    type="submit"
+                    value="ذخیره پروفایل"
+                    className="user-submit-btn"
+                  />
+                </div>
+              </form>
+            </div>
           )}
         </div>
-        <>
-          {editswitch ? (
-            <EditProfileForm
-              currentUser={currentUser}
-              setEditswitch={setEditSwitch}
-            />
-          ) : (
-            currentProfile && <ProfileBio currentProfile={currentProfile} />
-          )}
-        </>
       </div>
     </div>
   );

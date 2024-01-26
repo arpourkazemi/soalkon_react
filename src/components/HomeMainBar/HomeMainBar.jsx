@@ -128,10 +128,7 @@ const HomeMainBar = () => {
             </svg>
           </div>
         ) : (
-          <>
-            {/* <p>{searchedQuestions.length} سوال</p> */}
-            <QuestionList questionList={questionList} />
-          </>
+          <QuestionList questionList={questionList} />
         )}
       </div>
     </div>
