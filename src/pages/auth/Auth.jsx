@@ -6,8 +6,6 @@ import { motion } from "framer-motion";
 import "./auth.css";
 import Loading from "../../components/Loading/Loading";
 import icon from "../../assets/sklogo.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 const Auth = () => {
@@ -148,19 +146,6 @@ const Auth = () => {
                   setPassword(e.target.value);
                 }}
               />
-              {toggleState ? (
-                <FontAwesomeIcon
-                  className="password-eye"
-                  icon={faEyeSlash}
-                  onClick={toggleVisibility}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  className="password-eye"
-                  icon={faEye}
-                  onClick={toggleVisibility}
-                />
-              )}
             </div>
           </div>
           {isSignUp && (

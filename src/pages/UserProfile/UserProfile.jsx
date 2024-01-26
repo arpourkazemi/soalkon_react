@@ -8,8 +8,6 @@ import LeftSideBar from "../../components/LeftSideBar/LeftSideBar";
 import EditProfileForm from "./EditProfileForm";
 import ProfileBio from "./ProfileBio";
 import { allAvatars } from "../../Avatars/Avatars";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBirthdayCake } from "@fortawesome/free-solid-svg-icons";
 import { fromNow } from "../../utils";
 import axios from "axios";
 
@@ -80,10 +78,6 @@ const UserProfile = () => {
               <h1 style={{ marginBottom: "0" }}>{currentProfile?.name}</h1>
               <h3 style={{ marginBottom: "0" }}>{currentProfile?.email}</h3>
               <p className="label" style={{ marginTop: "10px" }}>
-                <FontAwesomeIcon
-                  icon={faBirthdayCake}
-                  style={{ marginRight: "2px" }}
-                />{" "}
                 اضافه شده {fromNow(moment(currentProfile?.time))}
               </p>
             </div>

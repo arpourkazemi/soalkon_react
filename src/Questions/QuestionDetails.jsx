@@ -20,7 +20,6 @@ import { fromNow } from "../utils";
 import axios from "axios";
 import { allAvatars } from "../Avatars/Avatars";
 import Loading from "../components/Loading/Loading";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const QuestionDetails = (props) => {
   const [answer, setAnswer] = useState(""); //will store the answer

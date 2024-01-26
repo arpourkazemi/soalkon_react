@@ -88,19 +88,19 @@ const Questions = ({ question }) => {
             flexDirection: "column",
           }}
         >
-          {question.similarity_percentage ? (
+          {question.similarity ? (
             <p
               className="display-time"
               style={{
                 color: `hsl(${
-                  (question.similarity_percentage / 100) * 120
+                  (question.similarity / 100) * 120
                 }, 100%, 50%)`,
                 backgroundColor: "#000",
                 padding: "1rem",
                 borderRadius: ".5rem",
               }}
             >
-              {question.similarity_percentage} % تشابه
+              {question.similarity} % تشابه
             </p>
           ) : (
             <div>
