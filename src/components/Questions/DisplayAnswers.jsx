@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
 
 import { allAvatars } from "../Avatars/Avatars";
-import { fromNow, toFarsiNumber } from "../utils";
+import { fromNow, toFarsiNumber } from "../../utils";
 import axios from "axios";
 
-import deleteIcon from "../assets/trash-solid.svg";
+import deleteIcon from "../../assets/trash-solid.svg";
 
 const DisplayAnswers = ({ question, setQuestion }) => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [boughtQuestions, setBoughtQuestions] = useState([]);
+  const [hasboughtThisQuestion, setHasBoughtThisQuestion] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem("currentUser"))
+  );
+
   const getSingleQuestion = async () => {
     setLoading(true);
     await axios
@@ -24,12 +33,37 @@ const DisplayAnswers = ({ question, setQuestion }) => {
     setLoading(false);
   };
 
-  const [currentUser, setCurrentUser] = useState();
-  const [loading, setLoading] = useState(false);
+  const saveUser = async (price) => {
+    setLoading(true);
+    await axios
+      .post(`api/inquirer`, {
+        ...currentUser,
+        balance: parseInt(price),
+      })
+      .then((res) => {
+        alert("خرید موفق آمیز");
+        setCurrentUser(res.data);
+        localStorage.setItem("currentUser", JSON.stringify(res.data));
+        navigate(`/questions/${id}`);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    setLoading(false);
+  };
 
-  useEffect(() => {
-    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
-  }, [localStorage.getItem("currentUser")]);
+  const getBoughtQuestions = async () => {
+    setLoading(true);
+    await axios
+      .get(`api/questioninquirer/${currentUser.id}/inquirer`)
+      .then((res) => {
+        setBoughtQuestions(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    setLoading(false);
+  };
 
   const handleDelete = async (answer) => {
     setLoading(true);
@@ -68,7 +102,39 @@ const DisplayAnswers = ({ question, setQuestion }) => {
     if (!currentUser) {
       alert("این عملیات نیازمند ورود به سیستم است");
     }
+    if (parseInt(currentUser.balance) < parseInt(question.price)) {
+      alert("موجودی شما برای خرید این سوال کافی نیست.");
+    }
+    setLoading(true);
+    await axios
+      .post("/api/questioninquirer", {
+        question_bought_id: question.id,
+        inquirer_bought_id: currentUser.id,
+      })
+      .then((res) => {
+        getBoughtQuestions();
+        saveUser(parseInt(currentUser.balance) - parseInt(question.price));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    setLoading(false);
   };
+
+  useEffect(() => {
+    boughtQuestions.forEach((qi) => {
+      if (question && qi.question_bought_id === question.id)
+        setHasBoughtThisQuestion(true);
+    });
+  }, [boughtQuestions]);
+
+  useEffect(() => {
+    getBoughtQuestions();
+  }, [currentUser]);
+
+  useEffect(() => {
+    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
+  }, [localStorage.getItem("currentUser")]);
 
   useEffect(() => {
     gsap.fromTo(
@@ -108,7 +174,8 @@ const DisplayAnswers = ({ question, setQuestion }) => {
           >
             {currentUser &&
             (question?.inquirer.id === currentUser.id ||
-              ans?.inquirer.id === currentUser.id) ? (
+              ans?.inquirer.id === currentUser.id ||
+              hasboughtThisQuestion) ? (
               <p>{ans.body}</p>
             ) : (
               <div
@@ -121,7 +188,7 @@ const DisplayAnswers = ({ question, setQuestion }) => {
               >
                 <div
                   style={{
-                    backgroundColor: "rgb(225, 225, 225)",
+                    backgroundColor: "#f8f8f2",
                     display: "flex",
                     flexDirection: "column",
                     width: "70%",

@@ -1,43 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-// import moment from "moment";
 import moment from "moment-jalaali";
-import copy from "copy-to-clipboard";
-// import { useSelector, useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 
-import deleteIcon from "../assets/trash-solid.svg";
-import upVoteIcon from "../assets/circle-up-solid.svg";
-import downVoteIcon from "../assets/circle-down-solid.svg";
+import deleteIcon from "../../assets/trash-solid.svg";
+import upVoteIcon from "../../assets/circle-up-solid.svg";
+import downVoteIcon from "../../assets/circle-down-solid.svg";
 
 import "./Questions.css";
 import DisplayAnswers from "./DisplayAnswers";
-import { fromNow, toFarsiNumber } from "../utils";
+import { fromNow, toFarsiNumber } from "../../utils";
 import axios from "axios";
 import { allAvatars } from "../Avatars/Avatars";
-import Loading from "../components/Loading/Loading";
+import Loading from "../Loading/Loading";
 
 const QuestionDetails = (props) => {
-  const [answer, setAnswer] = useState(""); //will store the answer
-
-  // const user = null; //will get the user details from the redux store
+  const navigate = useNavigate();
+  const [answer, setAnswer] = useState("");
+  const [upVotes, setUpVotes] = useState(0);
+  const [downVotes, setDownVotes] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState();
   const [currentUser, setCurrentUser] = useState(
     JSON.parse(localStorage.getItem("currentUser"))
   );
-
-  useEffect(() => {
-    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
-  }, [localStorage.getItem("currentUser")]);
-
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [upVotes, setUpVotes] = useState(0);
-  const [downvotes, setDownVotes] = useState(0);
-
-  const [success, setSuccess] = useState(false);
-  const [successText, setSuccessText] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState();
 
   const getSingleQuestion = async () => {
     setLoading(true);
@@ -54,10 +40,6 @@ const QuestionDetails = (props) => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    getSingleQuestion();
-  }, []);
-
   const deleteQuestion = async () => {
     setLoading(true);
     await axios
@@ -70,10 +52,6 @@ const QuestionDetails = (props) => {
       });
     setLoading(false);
   };
-
-  useEffect(() => {
-    getSingleQuestion();
-  }, []);
 
   const upVoteQuestion = async () => {
     setLoading(true);
@@ -101,23 +79,6 @@ const QuestionDetails = (props) => {
     setLoading(false);
   };
 
-  // const allUsers = [];
-
-  //to extract the entire user details of the user who asked the question
-  // const questionUser = [];
-  // questionList.data &&
-  //   questionList.data.forEach((question) => {
-  //     const users = allUsers.filter((user) => user._id === question.userId);
-  //     if (users.length > 0) {
-  //       questionUser.push(users[0]); // assuming there's only one matching user
-  //     }
-  //   });
-
-  //contains the avatars depending on user's gender
-  // const avatarQuestion =
-  //   questionUser[0]?.gender === "Male" ? maleAvatars : femaleAvatars;
-
-  //to post the answer and send the data to the databse and redux store
   const handlePostAnswer = async (e, answerLength) => {
     e.preventDefault();
     if (currentUser === null) {
@@ -149,20 +110,18 @@ const QuestionDetails = (props) => {
       }
     }
   };
-  const URL = "https://sukrit-stackoverflow-clone.netlify.app";
-  //to copy the url for share functionality
-  const handleShare = () => {
-    copy(URL + location.pathname); // will concat home url with the path and copy it to clipboard
-    setTimeout(() => {
-      setSuccess(false);
-    }, 2500);
-    setSuccess(true);
-    setSuccessText("Link copied successfully.");
-  };
 
-  const handleDelete = () => {
-    deleteQuestion();
-  };
+  useEffect(() => {
+    getSingleQuestion();
+  }, []);
+
+  useEffect(() => {
+    getSingleQuestion();
+  }, []);
+
+  useEffect(() => {
+    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
+  }, [localStorage.getItem("currentUser")]);
 
   return (
     <div className="question-details-page" data-scroll-section>
@@ -199,7 +158,7 @@ const QuestionDetails = (props) => {
                   <motion.button
                     className="delete-btn"
                     onClick={() => {
-                      handleDelete();
+                      deleteQuestion();
                     }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -248,7 +207,7 @@ const QuestionDetails = (props) => {
                   style={{ width: "25px", height: "25px", cursor: "pointer" }}
                 />
                 <p style={{ margin: ".25em 0", color: "#808080" }}>
-                  {toFarsiNumber(upVotes - downvotes)}
+                  {toFarsiNumber(upVotes - downVotes)}
                 </p>
                 <img
                   src={downVoteIcon}
@@ -306,12 +265,12 @@ const QuestionDetails = (props) => {
           </section>
           {currentQuestion?.answers.length !== 0 && (
             <section>
-              <h3>{currentQuestion?.answers.length} پاسخ</h3>
+              <h3>
+                {toFarsiNumber(parseInt(currentQuestion?.answers.length))} پاسخ
+              </h3>
               <DisplayAnswers
-                // key={currentQuestion.id}
                 question={currentQuestion}
                 setQuestion={setCurrentQuestion}
-                // handleShare={handleShare}
               />
             </section>
           )}

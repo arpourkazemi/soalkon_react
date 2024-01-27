@@ -9,41 +9,19 @@ import icon from "../../assets/sklogo.png";
 import axios from "axios";
 
 const Auth = () => {
-  const [isSignUp, setIsSignUp] = useState(false);
+  const navigate = useNavigate();
 
+  const [isSignUp, setIsSignUp] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [loading, setLoading] = useState(false);
-
   const [flag, setFlag] = useState(false);
-
-  const navigate = useNavigate();
-
-  //to toggle password visibility
-  const [toggleState, setToggleState] = useState(false);
-  const toggleVisibility = () => {
-    const passwordField = document.getElementById("password");
-    if (passwordField.type === "password") {
-      passwordField.type = "text";
-      setToggleState(true);
-    } else {
-      passwordField.type = "password";
-      setToggleState(false);
-    }
-  };
-
-  //to check if a password contains atleast 8 characters including 1 character and 1 number
-  const isValidText = (text) => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    return regex.test(text);
-  };
 
   const randomIndex = (n) => Math.floor(Math.random() * n);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); //To prevent the default state of submitting a form which is page refresh and url change
+    e.preventDefault();
     setFlag(false);
     if (!email) {
       alert("لطفا ایمیل خود را وارد کنید.");
@@ -61,9 +39,11 @@ const Auth = () => {
               name: name,
               email: email,
               password: password,
+              avatar: randomIndex(36),
             })
             .then((res) => {
               localStorage.setItem("currentUser", JSON.stringify(res.data));
+              navigate("/");
             })
             .catch((err) => {
               console.error(err);

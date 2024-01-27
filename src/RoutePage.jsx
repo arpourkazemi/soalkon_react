@@ -7,7 +7,7 @@ import About from "./pages/About/About";
 import Auth from "./pages/auth/Auth";
 import Questions from "./pages/Questions/Questions";
 import AskQuestions from "./pages/AskQuestions/AskQuestions";
-import DisplayQuestion from "./Questions/DisplayQuestion";
+import DisplayQuestion from "./components/Questions/DisplayQuestion";
 import Tags from "./pages/Tags/Tags";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import Payment from "./pages/Payment/Payment";

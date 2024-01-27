@@ -3,9 +3,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 import "./LeftSideBar.css";
 import Question from "../../assets/question.png";
-import Tags from "../../assets/Tags.png";
 import Logout from "../../assets/log-out.png";
-import { allAvatars } from "../../Avatars/Avatars";
+import { allAvatars } from "../Avatars/Avatars";
 import { toFarsiNumber } from "../../utils";
 
 import tagIcon from "../../assets/tags-solid.svg";
@@ -13,22 +12,21 @@ import userIcon from "../../assets/user-solid.svg";
 import aboutIcon from "../../assets/users-solid.svg";
 import paymentIcon from "../../assets/credit-card-regular.svg";
 import homeIcon from "../../assets/house-solid.svg";
-import moneyIcon from "../../assets/money-bill-wave-solid.svg";
 
 const LeftSideBar = () => {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState();
-
-  useEffect(() => {
-    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
-  }, [localStorage.getItem("currentUser")]);
-
-  const updatedUser = JSON.parse(localStorage.getItem("UpdatedProfile"));
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem("currentUser"))
+  );
 
   const handleLogout = () => {
     navigate("/");
     localStorage.removeItem("currentUser");
   };
+
+  useEffect(() => {
+    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
+  }, [localStorage.getItem("currentUser")]);
 
   return (
     <div className={`left-sidebar ${"sidebar-open"}`} id="left-sidebar">

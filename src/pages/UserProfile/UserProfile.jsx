@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import moment from "moment";
 import { motion } from "framer-motion";
 
 import "./UserProfile.css";
 import LeftSideBar from "../../components/LeftSideBar/LeftSideBar";
-import { allAvatars } from "../../Avatars/Avatars";
+import { allAvatars } from "../../components/Avatars/Avatars";
 import { fromNow } from "../../utils";
 import axios from "axios";
 
 const UserProfile = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
 
-  const [currentUser, setCurrentUser] = useState();
+  const [currentProfile, setCurrentProfile] = useState();
   const [loading, setLoading] = useState(false);
-
-  const [name, setName] = useState(currentUser?.name);
-  const [email, setEmail] = useState(currentUser?.email);
-  const [biography, setBiography] = useState(currentUser?.biography);
-  const [avatarIndex, setAvatarIndex] = useState(currentUser?.avatar);
-  const [editswitch, setEditSwitch] = useState(false); //edit profile useState
+  const [name, setName] = useState(currentProfile?.name);
+  const [email, setEmail] = useState(currentProfile?.email);
+  const [biography, setBiography] = useState(currentProfile?.biography);
+  const [avatarIndex, setAvatarIndex] = useState(currentProfile?.avatar);
+  const [editswitch, setEditSwitch] = useState(false);
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem("currentUser"))
+  );
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -35,25 +36,21 @@ const UserProfile = () => {
       })
       .then((res) => {
         localStorage.setItem("currentUser", JSON.stringify(res.data));
+        setCurrentProfile(res.data);
       })
       .catch((err) => {
         console.error(err);
       });
     setLoading(false);
-
     setEditSwitch(false);
   };
-
-  useEffect(() => {
-    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
-  }, [localStorage.getItem("currentUser")]);
 
   const getUserProfile = async () => {
     setLoading(true);
     await axios
       .get(`api/inquirer/${id}`)
       .then((res) => {
-        setCurrentUser(res.data);
+        setCurrentProfile(res.data);
         setName(res.data.name);
         setBiography(res.data.biography);
         setAvatarIndex(res.data.avatar);
@@ -66,8 +63,12 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
+    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
+  }, [localStorage.getItem("currentUser")]);
+
+  useEffect(() => {
     getUserProfile();
-  }, []);
+  }, [id]);
 
   return (
     <div className="home-container-1">
@@ -78,8 +79,7 @@ const UserProfile = () => {
             <h1 className="tags-h1">
               {editswitch ? "ویرایش پروفایل" : "پروفایل"}
             </h1>
-
-            {currentUser && currentUser.id == id && (
+            {currentUser && currentUser.id == currentProfile?.id && (
               <motion.button
                 className="ask-btn"
                 onClick={() => setEditSwitch((perv) => !perv)}
@@ -94,19 +94,21 @@ const UserProfile = () => {
           {!editswitch ? (
             <div className="user-details">
               <img
-                src={allAvatars[currentUser?.avatar]}
+                src={allAvatars[currentProfile?.avatar]}
                 height="180px"
                 alt=""
               />
               <div className="user-name">
-                <h1 style={{ marginBottom: "0" }}>{currentUser?.name}</h1>
-                <h3 style={{ marginBottom: "0" }}>{currentUser?.email}</h3>
+                <h1 style={{ marginBottom: "0" }}>{currentProfile?.name}</h1>
+                <h3 style={{ marginBottom: "0" }}>{currentProfile?.email}</h3>
                 <p className="label" style={{ marginTop: "10px" }}>
-                  {currentUser?.biography}
+                  {currentProfile?.biography}
                 </p>
                 <p className="label" style={{ marginTop: "10px" }}>
-                  {fromNow(moment(currentUser?.time)) +
-                    " پروفایلتو آپدیت کردی :)"}
+                  {"آخرین بار " + fromNow(moment(currentProfile?.time))}
+                  {currentUser && currentUser.id == currentProfile?.id
+                    ? " پروفایلتو آپدیت کردی :)"
+                    : " پروفایلشو آپدیت کرده :)"}
                 </p>
               </div>
             </div>

@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 
-//component
-import LeftSideBar from "../components/LeftSideBar/LeftSideBar";
+import LeftSideBar from "../LeftSideBar/LeftSideBar";
 import QuestionDetails from "./QuestionDetails";
 
 const DisplayQuestion = () => {

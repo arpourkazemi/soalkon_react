@@ -3,22 +3,26 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import "./HomeSideBar.css";
-import QuestionList from "./QuestionList";
+import QuestionList from "../Questions/QuestionList";
 import axios from "axios";
 
 const HomeMainBar = () => {
   const location = useLocation();
-
-  const [currentUser, setCurrentUser] = useState();
-
-  useEffect(() => {
-    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
-  }, [localStorage.getItem("currentUser")]);
-
+  const navigate = useNavigate();
   const tagName = useParams();
 
+  const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(false);
   const [questionList, setQuestionList] = useState([]);
+
+  const checkAuth = () => {
+    if (currentUser === null) {
+      alert("برای پرسیدن سوال باید وارد شوید.");
+      navigate("/auth");
+      return;
+    }
+    navigate("/AskQuestions");
+  };
 
   const getQuestions = async () => {
     setLoading(true);
@@ -70,6 +74,10 @@ const HomeMainBar = () => {
   }, [tagName]);
 
   useEffect(() => {
+    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
+  }, [localStorage.getItem("currentUser")]);
+
+  useEffect(() => {
     location.pathname === "/" &&
       setQuestionList(
         questionList.sort((q1, q2) =>
@@ -81,25 +89,6 @@ const HomeMainBar = () => {
         )
       );
   }, [location]);
-
-  questionList.data &&
-    questionList.data.sort((a, b) => {
-      if (a.noOfAnswers !== b.noOfAnswers) {
-        return b.noOfAnswers - a.noOfAnswers;
-      }
-      return 0;
-    });
-
-  const navigate = useNavigate();
-
-  const checkAuth = () => {
-    if (currentUser === null) {
-      alert("برای پرسیدن سوال باید وارد شوید.");
-      navigate("/auth");
-      return;
-    }
-    navigate("/AskQuestions");
-  };
 
   return (
     <div className="main-bar">

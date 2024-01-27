@@ -8,18 +8,17 @@ import logo from "../../assets/soalkonlogo.png";
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   const [currentUser, setCurrentUser] = useState();
-
-  useEffect(() => {
-    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
-  }, [localStorage.getItem("currentUser")]);
 
   const handleLogout = () => {
     localStorage.removeItem("currentUser");
     setCurrentUser(null);
     navigate("/");
   };
+
+  useEffect(() => {
+    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
+  }, [localStorage.getItem("currentUser")]);
 
   return (
     <nav className="main-nav" data-scroll-section>

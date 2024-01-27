@@ -4,37 +4,19 @@ import { motion } from "framer-motion";
 
 import "./AskQuestions.css";
 import axios from "axios";
-import QuestionList from "../../components/HomeMainBar/QuestionList";
+import QuestionList from "../../components/Questions/QuestionList";
 
 const AskQuestions = () => {
-  //useState hook to store the title, body and tags
+  const navigate = useNavigate();
+
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionBody, setQuestionBody] = useState("");
   const [tags, setTags] = useState("");
   const [price, setPrice] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState();
-  const [similarQuestionsJson, setSimilarQuestionsJson] = useState({});
   const [similarQuestions, setSimilarQuestions] = useState([]);
   const [showSimilarQuestions, setShowSimilarQuestions] = useState(false);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
-  }, [localStorage.getItem("currentUser")]);
-
-  // useEffect(() => {
-  //   Object.keys(similarQuestionsJson).length !== 0 && getSimilarQuestions();
-  // }, [similarQuestionsJson]);
-
-  useEffect(() => {
-    if (!showSimilarQuestions) {
-      setSimilarQuestionsJson({});
-      setSimilarQuestions([]);
-    }
-  }, [showSimilarQuestions]);
 
   const postQuestion = async () => {
     setLoading(true);
@@ -56,34 +38,8 @@ const AskQuestions = () => {
     setLoading(false);
   };
 
-  // const getSimilarQuestions = async () => {
-  //   setLoading(true);
-  //   for (const [key, value] of Object.entries(similarQuestionsJson)) {
-  //     await axios
-  //       .get(`/api/question/${key}/details`)
-  //       .then((res) => {
-  //         setSimilarQuestions((perv) => [
-  //           ...perv,
-  //           { ...res.data, similarity_percentage: parseInt(value) },
-  //         ]);
-  //       })
-  //       .catch((err) => {
-  //         console.error(err);
-  //       });
-  //   }
-  //   setShowSimilarQuestions(true);
-  //   setLoading(false);
-  // };
-
   const checkSimilarity = async () => {
     setLoading(true);
-    // setSimilarQuestionsJson({
-    //   6: "10.0",
-    //   8: "30.0",
-    //   9: "50.0",
-    //   11: "70.0",
-    //   12: "90.0",
-    // });
     const data = [
       {
         question_details: {
@@ -181,36 +137,31 @@ const AskQuestions = () => {
     // setLoading(false);
   };
 
-  //to handle the data after submitting a question
   const handleOnSubmit = (e) => {
     e.preventDefault();
     if (questionTitle === "" || questionBody === "" || tags === "") {
       alert("لطفا اطلاعات مورد نیاز سوال را تکمیل فرمائید.");
       return;
     }
-    // postQuestion();
     checkSimilarity();
-
-    // dispatch(
-    //   askQuestion(
-    //     {
-    //       questionTitle,
-    //       questionBody,
-    //       tags,
-    //       userPosted: user.result.name, // in 'user' we got a token 'result' which contains the name of the user logged in
-    //       userId: user?.result?._id,
-    //     },
-    //     navigate
-    //   )
-    // );
   };
 
-  //to handle the event of the 'enter' key pressed in the question's body
   const handleEnter = (e) => {
     if (e.key === "Enter") {
-      setQuestionBody(questionBody + "\n"); // When 'enter' is pressed then add a '\n' to the 'questionBody' as well
+      setQuestionBody(questionBody + "\n");
     }
   };
+
+  useEffect(() => {
+    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
+  }, [localStorage.getItem("currentUser")]);
+
+  useEffect(() => {
+    if (!showSimilarQuestions) {
+      setSimilarQuestions([]);
+    }
+  }, [showSimilarQuestions]);
+
   return (
     <div className="ask-question">
       <div className="ask-ques-container main-question-container">

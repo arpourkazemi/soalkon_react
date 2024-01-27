@@ -11,6 +11,7 @@
 .user-details {
   display: flex;
   align-items: flex-start;
+  align-items: center;
 }
 .user-name {
   padding-left: 20px;

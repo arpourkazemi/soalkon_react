@@ -4,11 +4,10 @@ import moment from "moment";
 import { gsap } from "gsap";
 
 import { fromNow, toFarsiNumber } from "../../utils";
-import { allAvatars } from "../../Avatars/Avatars";
+import { allAvatars } from "../Avatars/Avatars";
 import { motion } from "framer-motion";
 
 const Questions = ({ question }) => {
-  //gsap
   useEffect(() => {
     gsap.fromTo(
       ".display-question-container",
@@ -21,8 +20,6 @@ const Questions = ({ question }) => {
       }
     );
   }, []);
-
-  //screenWidth context
 
   return (
     <div className="display-question-container" data-scroll-section>

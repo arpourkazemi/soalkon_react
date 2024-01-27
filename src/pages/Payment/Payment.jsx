@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import moment from "moment";
 import { motion } from "framer-motion";
 
 import "./UserProfile.css";
@@ -8,35 +6,17 @@ import LeftSideBar from "../../components/LeftSideBar/LeftSideBar";
 import axios from "axios";
 
 const Payment = () => {
-  const { id } = useParams();
-
   const giftCards = [{ code: "prof_khosravi", price: 1000000 }];
-
+  const [price, setPrice] = useState(100000);
+  const [giftCardCode, setGiftCardCode] = useState("");
+  const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(
     JSON.parse(localStorage.getItem("currentUser"))
   );
-  const [price, setPrice] = useState(100000);
-  const [giftCardCode, setGiftCardCode] = useState("");
-
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
   }, [localStorage.getItem("currentUser")]);
-
-  const getUserDetails = async () => {
-    setLoading(true);
-    await axios
-      .get(`api/inquirer/${id}`)
-      .then((res) => {
-        setCurrentUser(res.data);
-        // console.log(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    setLoading(false);
-  };
 
   const saveUser = async (addedPrice = price) => {
     console.log(addedPrice);
